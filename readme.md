@@ -1,7 +1,7 @@
 ```
 $ make build
 mkdir -p dist
-go build --buildmode=c-shared -o dist/libfib.so
+go build -buildmode=c-shared -ldflags="-extldflags -Wl,-soname,libfib.so" -o dist/libfib.so
 
 $ make run
 python examples/run.py
@@ -27,5 +27,6 @@ linux
 $ LD_LIBRARY_PATH=dist python -c 'import ctypes.util as u; print(u._findLib_ld("fib"))'
 dist/libfib.so
 $ LD_LIBRARY_PATH=dist python -c 'import ctypes.util as u; print(u.find_library("fib"))'
-$ objdump -p -j .dynamic dist/libfib.so
+$ objdump -p -j .dynamic dist/libfib.so | grep -i soname
+  SONAME               libfib.so
 ```
